@@ -3,7 +3,11 @@ import { Button } from "@/components/ui/button";
 import { dummyUsers } from "@/lib/dummyData";
 import { MapPin, Mail, Phone } from "lucide-react";
 
-export const ProfileHeader = () => {
+interface ProfileHeaderProps {
+  onEdit: () => void;
+}
+
+export const ProfileHeader = ({ onEdit }: ProfileHeaderProps) => {
   const user = dummyUsers[0]; // Using first dummy user for demo
 
   return (
@@ -34,7 +38,7 @@ export const ProfileHeader = () => {
             </div>
           </div>
         </div>
-        <Button>Edit Profile</Button>
+        <Button onClick={onEdit}>Edit Profile</Button>
       </div>
     </div>
   );
