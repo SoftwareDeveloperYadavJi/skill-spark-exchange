@@ -23,7 +23,6 @@ The **Dynamic Skill Marketplace** frontend delivers a sleek, modern, and user-fr
 - **Authentication**: Google OAuth
 - **APIs**: Integration with backend REST APIs.
 
-
 ---
 
 ## Installation and Setup
@@ -31,15 +30,13 @@ The **Dynamic Skill Marketplace** frontend delivers a sleek, modern, and user-fr
 1. **Clone the Repository**
     
     ```bash
-   https://github.com/SoftwareDeveloperYadavJi/skill-spark-exchange
-    
+    git clone https://github.com/SoftwareDeveloperYadavJi/skill-spark-exchange
     ```
     
 2. **Install Dependencies**
     
     ```bash
     npm install
-    
     ```
     
 3. **Set Up Environment Variables**
@@ -58,9 +55,8 @@ The **Dynamic Skill Marketplace** frontend delivers a sleek, modern, and user-fr
     
 5. **Access the App**
     
-    Open [http://localhost:3000](http://localhost:3000/) in your browser.
+    Open [http://localhost:8080](http://localhost:8080) with your browser to see the result.
     
-
 ---
 
 ## Folder Structure
@@ -105,7 +101,7 @@ The **Dynamic Skill Marketplace** frontend delivers a sleek, modern, and user-fr
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](https://chatgpt.com/c/LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/SoftwareDeveloperYadavJi/skill-spark-exchange/blob/main/LICENSE) file for details.
 
 ---
 
