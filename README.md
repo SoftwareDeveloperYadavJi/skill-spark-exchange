@@ -1,69 +1,112 @@
-# Welcome to your Lovable project
+### Dynamic Skill Marketplace - Frontend
 
-## Project info
+The **Dynamic Skill Marketplace** frontend delivers a sleek, modern, and user-friendly experience for skill exchange. It facilitates user interactions, profile management, skill matching, Google Meet scheduling, and more.
 
-**URL**: https://lovable.dev/projects/cdcd1a27-e552-4f90-a291-2ee14d10ff51
+---
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Google Login Integration**: Simplified login with secure Google OAuth.
+- **Responsive User Profiles**: LinkedIn-style profiles to showcase credentials, skills, and experience.
+- **Skill Matching & Recommendations**: Discover complementary users for skill exchanges.
+- **Hero Section for Beginners**: Prominent beginner-friendly coding sessions.
+- **Connection Requests & Chat**: Send requests, chat, and coordinate sessions in real time.
+- **Google Meet Scheduling**: Schedule meetings directly through the chat interface.
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/cdcd1a27-e552-4f90-a291-2ee14d10ff51) and start prompting.
+## Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Framework**: React.js
+- **State Management**: Context API / Redux
+- **Styling**: Tailwind CSS, Sadcn UI
+- **Authentication**: Google OAuth
+- **APIs**: Integration with backend REST APIs.
 
-**Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Installation and Setup
 
-Follow these steps:
+1. **Clone the Repository**
+    
+    ```bash
+   https://github.com/SoftwareDeveloperYadavJi/skill-spark-exchange
+    
+    ```
+    
+2. **Install Dependencies**
+    
+    ```bash
+    npm install
+    
+    ```
+    
+3. **Set Up Environment Variables**
+    
+    Create a `.env.local` file with the following variables:
+    ```
+    NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id
+    NEXT_PUBLIC_API_BASE_URL=your_backend_api_url
+    ```
+    
+4. **Run the Development Server**
+    
+    ```bash
+    npm run dev
+    ```
+    
+5. **Access the App**
+    
+    Open [http://localhost:3000](http://localhost:3000/) in your browser.
+    
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Folder Structure
 
-# Step 3: Install the necessary dependencies.
-npm i
+- `src/`: Main source folder.
+    - `components/`: Reusable UI components.
+    - `pages/`: Next.js page-based routing.
+    - `styles/`: Tailwind CSS configurations.
+    - `contexts/`: Context API for state management.
+    - `utils/`: Helper functions.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+---
 
-**Edit a file directly in GitHub**
+## Routes
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- `/`: Landing page with Hero Section and Google login.
+- `/profile`: Profile management and credential display.
+- `/explore`: Discover users and send requests.
+- `/chat`: Chat with Google Meet scheduling.
+- `/hero`: Beginner-friendly coding sessions.
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Scripts
 
-## What technologies are used for this project?
+- `npm run dev`: Start the development server.
+- `npm run build`: Build the application for production.
+- `npm start`: Run the application in production mode.
+- `npm run lint`: Lint the codebase for style and syntax issues.
 
-This project is built with .
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Contributing
 
-## How can I deploy this project?
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature-name`).
+3. Commit changes (`git commit -m 'Add feature'`).
+4. Push to the branch (`git push origin feature-name`).
+5. Open a Pull Request.
 
-Simply open [Lovable](https://lovable.dev/projects/cdcd1a27-e552-4f90-a291-2ee14d10ff51) and click on Share -> Publish.
+---
 
-## I want to use a custom domain - is that possible?
+## License
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+This project is licensed under the MIT License. See the [LICENSE](https://chatgpt.com/c/LICENSE) file for details.
+
+---
+
+### Build an interactive and engaging skill-sharing experience with us!
