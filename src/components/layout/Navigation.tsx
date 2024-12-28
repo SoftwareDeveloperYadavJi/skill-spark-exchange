@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { LogIn, Menu, MessageCircle, User, Phone, Info, X } from "lucide-react";
+import { LogIn, Menu, MessageCircle, User, Phone, Info, X, Users } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -13,7 +13,7 @@ export const Navigation = () => {
     navigate("/");
   };
 
-  const logoClick = () =>{
+  const logoClick = () => {
     navigate("/dashboard");
   }
 
@@ -46,6 +46,12 @@ export const Navigation = () => {
               <Link to="/messages">
                 <MessageCircle className="mr-2" />
                 Messages
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/connections">
+                <Users className="mr-2" />
+                Connections
               </Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
@@ -82,6 +88,12 @@ export const Navigation = () => {
               <Link to="/messages">
                 <MessageCircle className="mr-2" />
                 Messages
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+              <Link to="/connections">
+                <Users className="mr-2" />
+                Connections
               </Link>
             </Button>
             <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
