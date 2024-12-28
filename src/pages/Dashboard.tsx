@@ -33,7 +33,7 @@ const Dashboard = () => {
             <h2 className="text-2xl font-bold mb-6">Suggested Connections</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {dummyUsers.filter(user => user.username !== "admin").map((user) => (
-                <div key={user.id} className="bg-white rounded-lg shadow-md p-6">
+                <div key={user.id} className="bg-white rounded-lg shadow-md p-6 border border-gray-100">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="bg-primary/10 p-3 rounded-full">
                       <User className="w-6 h-6 text-primary" />
