@@ -18,7 +18,7 @@ export const Navigation = () => {
   }
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="bg-background border-b">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <button 
@@ -30,7 +30,7 @@ export const Navigation = () => {
           
           {/* Mobile menu button */}
           <button
-            className="md:hidden"
+            className="md:hidden text-foreground"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
@@ -42,37 +42,37 @@ export const Navigation = () => {
 
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" asChild className="text-foreground">
               <Link to="/messages">
                 <MessageCircle className="mr-2" />
                 Messages
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" asChild className="text-foreground">
               <Link to="/connections">
                 <Users className="mr-2" />
                 Connections
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" asChild className="text-foreground">
               <Link to="/profile">
                 <User className="mr-2" />
                 Profile
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" asChild className="text-foreground">
               <Link to="/contact">
                 <Phone className="mr-2" />
                 Contact
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" asChild className="text-foreground">
               <Link to="/about">
                 <Info className="mr-2" />
                 About
               </Link>
             </Button>
-            <Button variant="outline" size="sm" asChild>
+            <Button variant="outline" size="sm" asChild className="text-foreground">
               <Link to="/">
                 <LogIn className="mr-2" />
                 Sign Out
@@ -84,37 +84,37 @@ export const Navigation = () => {
         {/* Mobile navigation */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 space-y-2 animate-fade-in">
-            <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+            <Button variant="ghost" size="sm" className="w-full justify-start text-foreground" asChild>
               <Link to="/messages">
                 <MessageCircle className="mr-2" />
                 Messages
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+            <Button variant="ghost" size="sm" className="w-full justify-start text-foreground" asChild>
               <Link to="/connections">
                 <Users className="mr-2" />
                 Connections
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+            <Button variant="ghost" size="sm" className="w-full justify-start text-foreground" asChild>
               <Link to="/profile">
                 <User className="mr-2" />
                 Profile
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+            <Button variant="ghost" size="sm" className="w-full justify-start text-foreground" asChild>
               <Link to="/contact">
                 <Phone className="mr-2" />
                 Contact
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+            <Button variant="ghost" size="sm" className="w-full justify-start text-foreground" asChild>
               <Link to="/about">
                 <Info className="mr-2" />
                 About
               </Link>
             </Button>
-            <Button variant="outline" size="sm" className="w-full justify-start" asChild>
+            <Button variant="outline" size="sm" className="w-full justify-start text-foreground" asChild>
               <Link to="/">
                 <LogIn className="mr-2" />
                 Sign Out

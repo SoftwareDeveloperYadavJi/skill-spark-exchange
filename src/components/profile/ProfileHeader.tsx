@@ -1,15 +1,14 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { dummyUsers } from "@/lib/dummyData";
-import { MapPin, Mail, Phone, Users, Star, BookOpen } from "lucide-react";
+import { MapPin, Mail, Phone, Users, Star, BookOpen, Moon, Sun } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ProfileEdit } from "./ProfileEdit";
 import { useState } from "react";
 import { useTheme } from "@/components/theme-provider";
-import { Moon, Sun } from "lucide-react";
 
 export const ProfileHeader = () => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const user = dummyUsers[0];
 
@@ -36,7 +35,7 @@ export const ProfileHeader = () => {
           <div className="flex-1">
             <div className="flex justify-between items-start w-full">
               <div>
-                <h1 className="text-2xl font-bold">{user.name}</h1>
+                <h1 className="text-2xl font-bold text-foreground">{user.name}</h1>
                 <p className="text-muted-foreground text-lg">{user.role}</p>
                 <p className="text-muted-foreground mt-1">
                   Full-stack developer passionate about creating impactful web applications. 
@@ -48,6 +47,7 @@ export const ProfileHeader = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                  className="text-foreground"
                 >
                   {theme === "light" ? (
                     <Moon className="h-5 w-5" />
@@ -55,7 +55,7 @@ export const ProfileHeader = () => {
                     <Sun className="h-5 w-5" />
                   )}
                 </Button>
-                <Button onClick={() => setIsEditing(true)}>Edit Profile</Button>
+                <Button onClick={() => setIsEditOpen(true)}>Edit Profile</Button>
               </div>
             </div>
 
@@ -103,7 +103,7 @@ export const ProfileHeader = () => {
           </div>
         </div>
       </div>
-      {isEditing && <ProfileEdit onClose={() => setIsEditing(false)} />}
+      <ProfileEdit open={isEditOpen} onOpenChange={setIsEditOpen} />
     </div>
   );
 };
