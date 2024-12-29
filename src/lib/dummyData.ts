@@ -7,7 +7,8 @@ export const dummyUsers = [
     role: "Full Stack Developer",
     skills: ["React", "Node.js", "TypeScript"],
     sessions: 15,
-    rating: 4.8
+    rating: 4.8,
+    connections: 128
   },
   {
     id: 2,
@@ -17,7 +18,8 @@ export const dummyUsers = [
     role: "Frontend Developer",
     skills: ["React", "Vue.js", "CSS"],
     sessions: 12,
-    rating: 4.9
+    rating: 4.9,
+    connections: 75
   },
   {
     id: 3,
@@ -27,7 +29,8 @@ export const dummyUsers = [
     role: "Backend Developer",
     skills: ["Python", "Django", "PostgreSQL"],
     sessions: 8,
-    rating: 4.7
+    rating: 4.7,
+    connections: 50
   }
 ];
 
