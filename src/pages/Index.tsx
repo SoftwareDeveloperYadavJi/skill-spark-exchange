@@ -1,9 +1,9 @@
 import { GoogleSignIn } from "@/components/auth/GoogleSignIn";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { dummyUsers } from "@/lib/dummyData";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { dummyUsers } from "@/lib/dummyData";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -29,7 +29,7 @@ const Index = () => {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-md p-8 bg-card rounded-2xl shadow-lg">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Welcome to SkillSpark</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Welcome to LearnSwap</h1>
           <p className="text-muted-foreground">Connect, learn, and grow with expert developers</p>
         </div>
         <form onSubmit={handleLogin} className="space-y-4 mb-4">

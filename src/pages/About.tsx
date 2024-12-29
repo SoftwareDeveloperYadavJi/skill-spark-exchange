@@ -1,5 +1,5 @@
-import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
+import { Navigation } from "@/components/layout/Navigation";
 import { Card } from "@/components/ui/card";
 
 const About = () => {
@@ -8,13 +8,13 @@ const About = () => {
       <Navigation />
       <main className="flex-1 container mx-auto px-4 py-8">
         <Card className="max-w-4xl mx-auto p-8">
-          <h1 className="text-3xl font-bold mb-6">About SkillSpark</h1>
-          
+          <h1 className="text-3xl font-bold mb-6">About LearnSwap</h1>
+
           <div className="space-y-6">
             <section>
               <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
               <p className="text-gray-600">
-                SkillSpark is dedicated to connecting learners with experienced developers,
+                LearnSwap is dedicated to connecting learners with experienced developers,
                 fostering a community where knowledge sharing and growth are paramount.
                 We believe in the power of peer-to-peer learning and mentorship.
               </p>

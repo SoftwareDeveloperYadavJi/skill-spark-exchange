@@ -3,56 +3,86 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface Education {
-  id: number;
+  id: string;
+  userId: string;
   institute: string;
-  city: string;
   degree: string;
-  field: string;
-  startYear: string;
-  endYear: string;
+  fieldOfStudy: string;
+  startDate: string;
+  endDate: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export const Education = () => {
-  const [education, setEducation] = useState<Education[]>([
-    {
-      id: 1,
-      institute: "Stanford University",
-      city: "Stanford, CA",
-      degree: "Bachelor's",
-      field: "Computer Science",
-      startYear: "2018",
-      endYear: "2022"
-    }
-  ]);
+interface EducationProps {
+  initialEducation: Education[];
+}
 
-  const [newEducation, setNewEducation] = useState<Omit<Education, 'id'>>({
-    institute: "",
-    city: "",
-    degree: "",
-    field: "",
-    startYear: "",
-    endYear: ""
+export const Education = ({ initialEducation }: EducationProps) => {
+  // Initialize the state with localStorage fallback or initialEducation prop
+  const [education, setEducation] = useState<Education[]>(() => {
+    const savedEducation = localStorage.getItem('education');
+    return savedEducation ? JSON.parse(savedEducation) : initialEducation || [];
   });
 
+  const [newEducation, setNewEducation] = useState<Omit<Education, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>({
+    institute: "",
+    degree: "",
+    fieldOfStudy: "",
+    startDate: "",
+    endDate: ""
+  });
+
+  // Effect to save the education data in localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('education', JSON.stringify(education));
+  }, [education]);
+
+  const formatDateForInput = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+  };
+
+  const formatDateForDisplay = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   const handleAdd = () => {
-    setEducation([...education, { ...newEducation, id: Date.now() }]);
+    if (!newEducation.institute || !newEducation.degree || !newEducation.fieldOfStudy || !newEducation.startDate || !newEducation.endDate) {
+      toast.error("All fields must be filled!");
+      return;
+    }
+
+    const newEntry: Education = {
+      ...newEducation,
+      id: Date.now().toString(),
+      userId: "dummy-user-id",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    setEducation((prevEducation) => [...prevEducation, newEntry]);
     setNewEducation({
       institute: "",
-      city: "",
       degree: "",
-      field: "",
-      startYear: "",
-      endYear: ""
+      fieldOfStudy: "",
+      startDate: "",
+      endDate: ""
     });
     toast.success("Education added successfully!");
   };
 
-  const handleDelete = (id: number) => {
-    setEducation(education.filter(edu => edu.id !== id));
+  const handleDelete = (id: string) => {
+    setEducation((prevEducation) => prevEducation.filter((edu) => edu.id !== id));
     toast.success("Education entry deleted successfully!");
   };
 
@@ -72,59 +102,47 @@ export const Education = () => {
               <DialogTitle>Add Education</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="institute">Institute Name</Label>
-                  <Input
-                    id="institute"
-                    value={newEducation.institute}
-                    onChange={(e) => setNewEducation({ ...newEducation, institute: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input
-                    id="city"
-                    value={newEducation.city}
-                    onChange={(e) => setNewEducation({ ...newEducation, city: e.target.value })}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="institute">Institute Name</Label>
+                <Input
+                  id="institute"
+                  value={newEducation.institute}
+                  onChange={(e) => setNewEducation({ ...newEducation, institute: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="degree">Degree</Label>
+                <Input
+                  id="degree"
+                  value={newEducation.degree}
+                  onChange={(e) => setNewEducation({ ...newEducation, degree: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="fieldOfStudy">Field of Study</Label>
+                <Input
+                  id="fieldOfStudy"
+                  value={newEducation.fieldOfStudy}
+                  onChange={(e) => setNewEducation({ ...newEducation, fieldOfStudy: e.target.value })}
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="degree">Degree</Label>
+                  <Label htmlFor="startDate">Start Date</Label>
                   <Input
-                    id="degree"
-                    value={newEducation.degree}
-                    onChange={(e) => setNewEducation({ ...newEducation, degree: e.target.value })}
+                    id="startDate"
+                    type="date"
+                    value={newEducation.startDate}
+                    onChange={(e) => setNewEducation({ ...newEducation, startDate: e.target.value })}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="field">Field of Study</Label>
+                  <Label htmlFor="endDate">End Date</Label>
                   <Input
-                    id="field"
-                    value={newEducation.field}
-                    onChange={(e) => setNewEducation({ ...newEducation, field: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="startYear">Start Year</Label>
-                  <Input
-                    id="startYear"
-                    type="number"
-                    value={newEducation.startYear}
-                    onChange={(e) => setNewEducation({ ...newEducation, startYear: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="endYear">End Year</Label>
-                  <Input
-                    id="endYear"
-                    type="number"
-                    value={newEducation.endYear}
-                    onChange={(e) => setNewEducation({ ...newEducation, endYear: e.target.value })}
+                    id="endDate"
+                    type="date"
+                    value={newEducation.endDate}
+                    onChange={(e) => setNewEducation({ ...newEducation, endDate: e.target.value })}
                   />
                 </div>
               </div>
@@ -134,27 +152,34 @@ export const Education = () => {
         </Dialog>
       </div>
       <div className="space-y-4">
-        {education.map((edu) => (
-          <div key={edu.id} className="border rounded-lg p-4 bg-background">
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="font-semibold text-foreground">{edu.institute}</h3>
-                <p className="text-sm text-muted-foreground">{edu.city}</p>
-                <p className="text-sm text-foreground">{edu.degree} in {edu.field}</p>
-                <p className="text-sm text-muted-foreground">{edu.startYear} - {edu.endYear}</p>
+        {education.length > 0 ? (
+          education.map((edu) => (
+            <div key={edu.id} className="border rounded-lg p-4 bg-background">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-semibold text-foreground">{edu.institute}</h3>
+                  <p className="text-sm text-foreground">{edu.degree} in {edu.fieldOfStudy}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {formatDateForDisplay(edu.startDate)} - {formatDateForDisplay(edu.endDate)}
+                  </p>
+                </div>
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  onClick={() => handleDelete(edu.id)}
+                  className="h-8 w-8"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
-              <Button
-                variant="destructive"
-                size="icon"
-                onClick={() => handleDelete(edu.id)}
-                className="h-8 w-8"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="text-muted-foreground">No education entries available.</p>
+        )}
       </div>
     </div>
   );
 };
+
+export default Education;

@@ -6,7 +6,7 @@ export const Footer = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center md:text-left">
-            <h3 className="text-lg font-semibold mb-4">SkillSpark</h3>
+            <h3 className="text-lg font-semibold mb-4">LearnSwap</h3>
             <p className="text-muted-foreground">Connect, learn, and grow with expert developers</p>
           </div>
           <div className="text-center md:text-left">
@@ -19,11 +19,11 @@ export const Footer = () => {
           </div>
           <div className="text-center md:text-left">
             <h4 className="text-lg font-semibold mb-4">Contact</h4>
-            <p className="text-muted-foreground">support@skillspark.com</p>
+            <p className="text-muted-foreground">support@LearnSwap.com</p>
           </div>
         </div>
         <div className="border-t mt-8 pt-8 text-center text-muted-foreground">
-          <p>&copy; 2024 SkillSpark. All rights reserved.</p>
+          <p>&copy; 2024 LearnSwap. All rights reserved.</p>
         </div>
       </div>
     </footer>

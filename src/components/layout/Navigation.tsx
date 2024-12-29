@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { LogIn, Menu, MessageCircle, User, Phone, Info, X, Users } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Info, LogIn, Menu, MessageCircle, Phone, User, Users, X } from "lucide-react";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export const Navigation = () => {
@@ -21,13 +21,13 @@ export const Navigation = () => {
     <nav className="bg-background border-b">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <button 
-            onClick={logoClick} 
+          <button
+            onClick={logoClick}
             className="text-2xl font-bold text-primary hover:opacity-80 transition-opacity"
           >
-            SkillSpark
+            LearnSwap
           </button>
-          
+
           {/* Mobile menu button */}
           <button
             className="md:hidden text-foreground"

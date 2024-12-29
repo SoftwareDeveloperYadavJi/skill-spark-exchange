@@ -1,7 +1,7 @@
-import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
-import { Card } from "@/components/ui/card";
+import { Navigation } from "@/components/layout/Navigation";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, MapPin, Phone } from "lucide-react";
@@ -60,7 +60,7 @@ const Contact = () => {
                 <Mail className="w-5 h-5 text-primary mt-1" />
                 <div>
                   <h3 className="font-medium">Email</h3>
-                  <p className="text-gray-600">support@skillspark.com</p>
+                  <p className="text-gray-600">support@LearnSwap.com</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
