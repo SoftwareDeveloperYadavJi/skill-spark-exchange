@@ -5,13 +5,22 @@ import { Label } from "@/components/ui/label";
 import { Edit } from "lucide-react";
 import { useState } from "react";
 
-export const ProfileEdit = () => {
+interface ProfileEditProps {
+  onClose: () => void;
+}
+
+export const ProfileEdit = ({ onClose }: ProfileEditProps) => {
   const [profile, setProfile] = useState({
     name: "John Doe",
     title: "Full Stack Developer",
     location: "San Francisco, CA",
     dob: "1990-01-01"
   });
+
+  const handleSave = () => {
+    // Here you would typically save the changes
+    onClose();
+  };
 
   return (
     <Dialog>
@@ -59,7 +68,7 @@ export const ProfileEdit = () => {
               onChange={(e) => setProfile({ ...profile, dob: e.target.value })}
             />
           </div>
-          <Button className="w-full">Save Changes</Button>
+          <Button className="w-full" onClick={handleSave}>Save Changes</Button>
         </div>
       </DialogContent>
     </Dialog>
