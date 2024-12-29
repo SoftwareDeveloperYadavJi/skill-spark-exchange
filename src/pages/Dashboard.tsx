@@ -21,7 +21,7 @@ const Dashboard = () => {
           <HeroSection />
           
           <div className="mt-12">
-            <h2 className="text-2xl font-bold mb-6">Upcoming Sessions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-foreground">Upcoming Sessions</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {dummySessions.map((session) => (
                 <SessionCard key={session.id} {...session} />
@@ -30,17 +30,17 @@ const Dashboard = () => {
           </div>
 
           <div className="mt-12">
-            <h2 className="text-2xl font-bold mb-6">Suggested Connections</h2>
+            <h2 className="text-2xl font-bold mb-6 text-foreground">Suggested Connections</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {dummyUsers.filter(user => user.username !== "admin").map((user) => (
-                <div key={user.id} className="bg-white rounded-lg shadow-md p-6 border border-gray-100">
+                <div key={user.id} className="bg-background rounded-lg shadow-md p-6 border border-border">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="bg-primary/10 p-3 rounded-full">
                       <User className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold">{user.name}</h3>
-                      <p className="text-sm text-gray-600">{user.role}</p>
+                      <h3 className="font-semibold text-foreground">{user.name}</h3>
+                      <p className="text-sm text-muted-foreground">{user.role}</p>
                     </div>
                   </div>
                   <div className="space-y-3">
@@ -48,13 +48,13 @@ const Dashboard = () => {
                       {user.skills.map((skill) => (
                         <span
                           key={skill}
-                          className="px-3 py-1 bg-secondary rounded-full text-sm text-primary"
+                          className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm"
                         >
                           {skill}
                         </span>
                       ))}
                     </div>
-                    <div className="flex justify-between items-center text-sm text-gray-600">
+                    <div className="flex justify-between items-center text-sm text-muted-foreground">
                       <span>{user.sessions} sessions completed</span>
                       <span>{user.rating} ⭐</span>
                     </div>

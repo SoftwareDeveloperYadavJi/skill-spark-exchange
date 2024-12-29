@@ -2,8 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Edit } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface Education {
   id: number;
@@ -47,12 +48,18 @@ export const Education = () => {
       startYear: "",
       endYear: ""
     });
+    toast.success("Education added successfully!");
+  };
+
+  const handleDelete = (id: number) => {
+    setEducation(education.filter(edu => edu.id !== id));
+    toast.success("Education entry deleted successfully!");
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Education</h2>
+        <h2 className="text-2xl font-semibold text-foreground">Education</h2>
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline" size="sm">
@@ -60,7 +67,7 @@ export const Education = () => {
               Add Education
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Add Education</DialogTitle>
             </DialogHeader>
@@ -128,11 +135,23 @@ export const Education = () => {
       </div>
       <div className="space-y-4">
         {education.map((edu) => (
-          <div key={edu.id} className="border rounded-lg p-4">
-            <h3 className="font-semibold">{edu.institute}</h3>
-            <p className="text-sm text-gray-500">{edu.city}</p>
-            <p className="text-sm">{edu.degree} in {edu.field}</p>
-            <p className="text-sm text-gray-500">{edu.startYear} - {edu.endYear}</p>
+          <div key={edu.id} className="border rounded-lg p-4 bg-background">
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="font-semibold text-foreground">{edu.institute}</h3>
+                <p className="text-sm text-muted-foreground">{edu.city}</p>
+                <p className="text-sm text-foreground">{edu.degree} in {edu.field}</p>
+                <p className="text-sm text-muted-foreground">{edu.startYear} - {edu.endYear}</p>
+              </div>
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => handleDelete(edu.id)}
+                className="h-8 w-8"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         ))}
       </div>
