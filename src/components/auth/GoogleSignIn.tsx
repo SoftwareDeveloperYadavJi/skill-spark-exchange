@@ -4,7 +4,7 @@ import { LogIn } from "lucide-react";
 export const GoogleSignIn = () => {
   const handleSignIn = () => {
     console.log("Google Sign In clicked");
-    // Google Sign In logic will be implemented when Supabase is connected
+    window.location.href = "http://localhost:4000/auth/google";
   };
 
   return (

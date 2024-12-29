@@ -1,6 +1,6 @@
 ### Dynamic Skill Marketplace - Frontend
 
-The **Dynamic Skill Marketplace** frontend delivers a sleek, modern, and user-friendly experience for skill exchange. It facilitates user interactions, profile management, skill matching, Google Meet scheduling, and more.
+The **Dynamic Skill Marketplace** frontend delivers a sleek, modern, and user-friendly experience for skill exchange. It facilitates user interactions, profile management, skill matching, Google Meet scheduling, and more additions to enhance the overall user experience.
 
 ---
 
