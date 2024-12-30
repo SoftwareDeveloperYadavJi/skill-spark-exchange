@@ -2,15 +2,39 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Edit, Github, Linkedin, Twitter } from "lucide-react";
-import { useState } from "react";
+import { Edit, Github, Linkedin, Twitter, Globe } from "lucide-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export const SocialMedia = () => {
   const [links, setLinks] = useState({
-    github: "https://github.com/johndoe",
-    linkedin: "https://linkedin.com/in/johndoe",
-    twitter: "https://twitter.com/johndoe"
+    github: "",
+    linkedin: "",
+    twitter: "",
+    website: "",
   });
+
+  useEffect(() => {
+    const fetchSocialMediaLinks = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/api/user/socialmedia", {
+          headers: { "user-id": "cm519rtib0000ffy0llai5lc5" },
+        });
+        const { github, linkedin, twitter, website } = response.data;
+        setLinks({ github, linkedin, twitter, website });
+        console.log("Fetched Social Media Links:", response.data);
+      } catch (error) {
+        console.error("Error fetching social media links:", error);
+      }
+    };
+
+    fetchSocialMediaLinks();
+  }, []);
+
+  const handleSaveChanges = () => {
+    console.log("Updated Links:", links);
+    // Send the updated links to the server if needed.
+  };
 
   return (
     <div className="space-y-6">
@@ -52,14 +76,24 @@ export const SocialMedia = () => {
                   onChange={(e) => setLinks({ ...links, twitter: e.target.value })}
                 />
               </div>
-              <Button className="w-full">Save Changes</Button>
+              <div className="space-y-2">
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
+                  value={links.website}
+                  onChange={(e) => setLinks({ ...links, website: e.target.value })}
+                />
+              </div>
+              <Button className="w-full" onClick={handleSaveChanges}>
+                Save Changes
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
       </div>
       <div className="flex gap-4">
         <a
-          href={links.github}
+          href={`https://${links.github}`}
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-primary"
@@ -67,7 +101,7 @@ export const SocialMedia = () => {
           <Github className="w-6 h-6" />
         </a>
         <a
-          href={links.linkedin}
+          href={`https://${links.linkedin}`}
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-primary"
@@ -75,12 +109,20 @@ export const SocialMedia = () => {
           <Linkedin className="w-6 h-6" />
         </a>
         <a
-          href={links.twitter}
+          href={`https://${links.twitter}`}
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-primary"
         >
           <Twitter className="w-6 h-6" />
+        </a>
+        <a
+          href={`https://${links.website}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-primary"
+        >
+          <Globe className="w-6 h-6" />
         </a>
       </div>
     </div>

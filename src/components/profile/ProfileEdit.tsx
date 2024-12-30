@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "sonner";
+import axios from "axios";
 
 interface ProfileEditProps {
   open: boolean;
@@ -27,10 +28,41 @@ export const ProfileEdit = ({ open, onOpenChange }: ProfileEditProps) => {
     preferredLanguage: "English"
   });
 
-  const handleSave = () => {
-    // Here you would typically save the changes to your backend
-    toast.success("Profile updated successfully!");
-    onOpenChange(false);
+  const handleSave = async () => {
+    const data = JSON.stringify({
+      mobileNumber: profile.phone,
+      gender: profile.gender,
+      city: profile.city,
+      state: profile.state,
+      country: profile.country,
+      dob: profile.dob,
+      phone: profile.phone,
+      language: profile.language,
+      preferredLanguage: profile.preferredLanguage,
+      about: profile.bio
+    });
+
+    const config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:4000/api/complete-profile",
+      headers: {
+        "user-id": "cm519rtib0000ffy0llai5lc5",
+        "Content-Type": "application/json"
+      },
+      data: data
+    };
+
+    try {
+      const response = await axios.request(config);
+      console.log(response.data);
+      toast.success("Profile updated successfully!");
+      console.log(response.data);
+      onOpenChange(false);
+    } catch (error) {
+      toast.error("Failed to update profile.");
+      console.error(error);
+    }
   };
 
   return (
@@ -51,7 +83,7 @@ export const ProfileEdit = ({ open, onOpenChange }: ProfileEditProps) => {
               onChange={(e) => setProfile({ ...profile, name: e.target.value })}
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input

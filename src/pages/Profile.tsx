@@ -13,8 +13,6 @@ import axios from "axios";
 const Profile = () => {
 
   const [user, setUser] = useState<any>({});
-  const [education, setEducation] = useState<any>([]);
-  const [socialMedia, setSocialMedia] = useState<any>([]);
 
   useEffect(() => {
     let data = JSON.stringify({
@@ -43,30 +41,7 @@ const Profile = () => {
 
   }, []);
 
-  useEffect(() => {
-    const fetchEducation = async () => {
-      try {
-        const config = {
-          method: "get",
-          url: "http://localhost:4000/api/user/education",
-          headers: {
-            "user-id": "cm519rtib0000ffy0llai5lc5",
-          },
-        };
 
-        const response = await axios.request(config);
-        if (Array.isArray(response.data)) {
-          setEducation(response.data);
-        } else {
-          console.error("Invalid response format:", response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching education data:", error);
-      }
-    };
-
-    fetchEducation();
-  }, []);
 
 
 
@@ -78,7 +53,7 @@ const Profile = () => {
           <ProfileHeader  {...user} />
           <ProfileDetails {...user} />
           <Skills />
-          <Education initialEducation={education} />
+          <Education />
           <SocialMedia />
           <Reviews />
         </div>

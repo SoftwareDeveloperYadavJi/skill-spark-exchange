@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Star, User } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 interface Review {
-  id: number;
+  id: string;
   name: string;
   rating: number;
   comment: string;
@@ -12,24 +13,39 @@ interface Review {
 }
 
 export const Reviews = () => {
-  const [reviews, setReviews] = useState<Review[]>([
-    {
-      id: 1,
-      name: "Alice Johnson",
-      rating: 5,
-      comment: "Excellent mentor! Very patient and knowledgeable.",
-      visible: true
-    },
-    {
-      id: 2,
-      name: "Bob Smith",
-      rating: 4,
-      comment: "Great teaching style and clear explanations.",
-      visible: true
-    }
-  ]);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
-  const toggleReviewVisibility = (id: number) => {
+  // Fetch reviews from the API
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: "http://localhost:4000/api/review/get",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const response = await axios.request(config);
+        const fetchedReviews = response.data.map((review: any) => ({
+          id: review.id,
+          name: review.user.name,
+          rating: review.rating,
+          comment: review.reviewDescription,
+          visible: true, // Default to visible
+        }));
+        setReviews(fetchedReviews);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
+  const toggleReviewVisibility = (id: string) => {
     setReviews(reviews.map(review =>
       review.id === id ? { ...review, visible: !review.visible } : review
     ));

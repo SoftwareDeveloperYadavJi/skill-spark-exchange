@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Edit, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import axios from "axios";
 
 interface Education {
   id: string;
@@ -19,71 +20,94 @@ interface Education {
 }
 
 interface EducationProps {
-  initialEducation: Education[];
+  initialEducation?: Education[];
 }
 
-export const Education = ({ initialEducation }: EducationProps) => {
-  // Initialize the state with localStorage fallback or initialEducation prop
-  const [education, setEducation] = useState<Education[]>(() => {
-    const savedEducation = localStorage.getItem('education');
-    return savedEducation ? JSON.parse(savedEducation) : initialEducation || [];
-  });
-
-  const [newEducation, setNewEducation] = useState<Omit<Education, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>({
+export const Education = ({ initialEducation = [] }: EducationProps) => {
+  const [education, setEducation] = useState<Education[]>(initialEducation);
+  const [newEducation, setNewEducation] = useState<Omit<Education, "id" | "userId" | "createdAt" | "updatedAt">>({
     institute: "",
     degree: "",
     fieldOfStudy: "",
     startDate: "",
-    endDate: ""
+    endDate: "",
   });
 
-  // Effect to save the education data in localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('education', JSON.stringify(education));
-  }, [education]);
+    const fetchEducation = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/api/user/education", {
+          headers: { "user-id": "cm519rtib0000ffy0llai5lc5" },
+        });
 
-  const formatDateForInput = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toISOString().split('T')[0];
-  };
+        if (Array.isArray(response.data)) {
+          setEducation(response.data);
+        } else {
+          console.error("Invalid response format:", response.data);
+          toast.error("Failed to load education data.");
+        }
+      } catch (error) {
+        console.error("Error fetching education data:", error);
+        toast.error("Error fetching education data.");
+      }
+    };
 
-  const formatDateForDisplay = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+    fetchEducation();
+  }, []);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!newEducation.institute || !newEducation.degree || !newEducation.fieldOfStudy || !newEducation.startDate || !newEducation.endDate) {
       toast.error("All fields must be filled!");
       return;
     }
 
-    const newEntry: Education = {
-      ...newEducation,
-      id: Date.now().toString(),
-      userId: "dummy-user-id",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/user/education",
+        {
+          ...newEducation,
+        },
+        {
+          headers: { "user-id": "cm519rtib0000ffy0llai5lc5" },
+        }
+      );
 
-    setEducation((prevEducation) => [...prevEducation, newEntry]);
-    setNewEducation({
-      institute: "",
-      degree: "",
-      fieldOfStudy: "",
-      startDate: "",
-      endDate: ""
-    });
-    toast.success("Education added successfully!");
+      setEducation((prev) => [...prev, response.data]);
+      setNewEducation({
+        institute: "",
+        degree: "",
+        fieldOfStudy: "",
+        startDate: "",
+        endDate: "",
+      });
+      toast.success("Education added successfully!");
+    } catch (error) {
+      console.error("Error adding education:", error);
+      toast.error("Error adding education entry.");
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setEducation((prevEducation) => prevEducation.filter((edu) => edu.id !== id));
-    toast.success("Education entry deleted successfully!");
+  const handleDelete = async (id: string) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/user/education/${id}`, {
+        headers: { "user-id": "cm519rtib0000ffy0llai5lc5" },
+      });
+
+      setEducation((prev) => prev.filter((edu) => edu.id !== id));
+      toast.success("Education entry deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting education:", error);
+      toast.error("Error deleting education entry.");
+    }
+  };
+
+  const formatDateForDisplay = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
   return (
@@ -146,7 +170,9 @@ export const Education = ({ initialEducation }: EducationProps) => {
                   />
                 </div>
               </div>
-              <Button onClick={handleAdd} className="w-full">Add Education</Button>
+              <Button onClick={handleAdd} className="w-full">
+                Add Education
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -158,7 +184,9 @@ export const Education = ({ initialEducation }: EducationProps) => {
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="font-semibold text-foreground">{edu.institute}</h3>
-                  <p className="text-sm text-foreground">{edu.degree} in {edu.fieldOfStudy}</p>
+                  <p className="text-sm text-foreground">
+                    {edu.degree} in {edu.fieldOfStudy}
+                  </p>
                   <p className="text-sm text-muted-foreground">
                     {formatDateForDisplay(edu.startDate)} - {formatDateForDisplay(edu.endDate)}
                   </p>

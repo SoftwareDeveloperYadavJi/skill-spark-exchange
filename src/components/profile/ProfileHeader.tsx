@@ -63,7 +63,7 @@ export const ProfileHeader = ({
             <div className="flex justify-between items-start w-full">
               <div>
                 <h1 className="text-2xl font-bold text-foreground">{name}</h1>
-                <p className="text-muted-foreground text-lg">{role}</p>
+                <p className="text-muted-foreground text-lg">Full Stack Developer</p>
                 <p className="text-muted-foreground mt-1">
                   {about}
                 </p>

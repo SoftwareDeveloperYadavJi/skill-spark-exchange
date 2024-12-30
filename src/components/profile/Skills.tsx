@@ -3,29 +3,58 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit, Plus, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 interface Skill {
-  id: number;
+  id: string;
   name: string;
 }
 
 export const Skills = () => {
-  const [offeredSkills, setOfferedSkills] = useState<Skill[]>([
-    { id: 1, name: "React" },
-    { id: 2, name: "TypeScript" }
-  ]);
-  const [requestedSkills, setRequestedSkills] = useState<Skill[]>([
-    { id: 1, name: "Python" },
-    { id: 2, name: "Machine Learning" }
-  ]);
+  const [offeredSkills, setOfferedSkills] = useState<Skill[]>([]);
+  const [requestedSkills, setRequestedSkills] = useState<Skill[]>([]);
   const [newSkill, setNewSkill] = useState("");
   const [skillType, setSkillType] = useState<"offered" | "requested">("offered");
 
+  // Fetch skills data from the API
+  useEffect(() => {
+    const config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: "http://localhost:4000/api/user/skillexchange",
+      headers: {
+        "user-id": "cm519rtib0000ffy0llai5lc5",
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        const data = response.data[0]; // Assuming we use the first object from the response
+        setOfferedSkills(
+          data.offeredSkill.split(", ").map((skill: string, index: number) => ({
+            id: `offered-${index}`,
+            name: skill,
+          }))
+        );
+        setRequestedSkills(
+          data.requestedSkill.split(", ").map((skill: string, index: number) => ({
+            id: `requested-${index}`,
+            name: skill,
+          }))
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   const handleAddSkill = () => {
     if (!newSkill.trim()) return;
-    
-    const skill = { id: Date.now(), name: newSkill };
+
+    const skill = { id: `${Date.now()}`, name: newSkill };
     if (skillType === "offered") {
       setOfferedSkills([...offeredSkills, skill]);
     } else {
@@ -34,11 +63,11 @@ export const Skills = () => {
     setNewSkill("");
   };
 
-  const handleRemoveSkill = (id: number, type: "offered" | "requested") => {
+  const handleRemoveSkill = (id: string, type: "offered" | "requested") => {
     if (type === "offered") {
-      setOfferedSkills(offeredSkills.filter(skill => skill.id !== id));
+      setOfferedSkills(offeredSkills.filter((skill) => skill.id !== id));
     } else {
-      setRequestedSkills(requestedSkills.filter(skill => skill.id !== id));
+      setRequestedSkills(requestedSkills.filter((skill) => skill.id !== id));
     }
   };
 
