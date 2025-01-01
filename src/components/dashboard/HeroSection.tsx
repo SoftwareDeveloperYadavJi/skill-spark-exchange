@@ -19,21 +19,11 @@ export const HeroSection = () => {
             <Button size="lg" variant="outline" className="bg-white text-primary hover:bg-white/10">
               Browse Sessions
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-primary hover:bg-white/10">
+            <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10">
               Become a Mentor
             </Button>
           </div>
         </div>
-      </div>
-      <div className="absolute bottom-0 right-0 p-6 flex gap-4">
-        <Card className="bg-white/10 backdrop-blur-lg border-white/20 p-4 text-white cursor-pointer">
-          <Users className="w-6 h-6 mb-2" />
-          <p className="text-sm">500+ Active Mentors</p>
-        </Card>
-        <Card className="bg-white/10 backdrop-blur-lg border-white/20 p-4 text-white cursor-pointer">
-          <Calendar className="w-6 h-6 mb-2" />
-          <p className="text-sm">Weekly Sessions</p>
-        </Card>
       </div>
     </div>
   );
