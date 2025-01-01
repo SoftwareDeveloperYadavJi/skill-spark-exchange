@@ -17,8 +17,13 @@ export const SocialMedia = () => {
   useEffect(() => {
     const fetchSocialMediaLinks = async () => {
       try {
+        const token = localStorage.getItem("authToken"); // Retrieve the token from localStorage
+// Replace this with the actual token retrieval logic
         const response = await axios.get("http://localhost:4000/api/user/socialmedia", {
-          headers: { "user-id": "cm519rtib0000ffy0llai5lc5" },
+          headers: {
+            "user-id": "cm519rtib0000ffy0llai5lc5",
+            Authorization: `Bearer ${token}`, // Include the token here
+          },
         });
         const { github, linkedin, twitter, website } = response.data;
         setLinks({ github, linkedin, twitter, website });
@@ -30,6 +35,7 @@ export const SocialMedia = () => {
 
     fetchSocialMediaLinks();
   }, []);
+
 
   const handleSaveChanges = () => {
     console.log("Updated Links:", links);

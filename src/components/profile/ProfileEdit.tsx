@@ -42,12 +42,22 @@ export const ProfileEdit = ({ open, onOpenChange }: ProfileEditProps) => {
       about: profile.bio
     });
 
+    const token = localStorage.getItem("authToken"); // Retrieve token from localStorage
+
+    console.log("Retrieved token:", token); // Debugging: Check if token is retrieved
+
+    if (!token) {
+      toast.error("Token not found. Please log in again.");
+      return;
+    }
+
     const config = {
       method: "post",
       maxBodyLength: Infinity,
       url: "http://localhost:4000/api/complete-profile",
       headers: {
-        "user-id": "cm519rtib0000ffy0llai5lc5",
+        "user-id": "cm519rtib0000ffy0llai5lc5", // Replace with actual user-id if necessary
+        "Authorization": `Bearer ${token}`, // Include token in Authorization header
         "Content-Type": "application/json"
       },
       data: data
@@ -55,13 +65,12 @@ export const ProfileEdit = ({ open, onOpenChange }: ProfileEditProps) => {
 
     try {
       const response = await axios.request(config);
-      console.log(response.data);
+      console.log("API Response:", response.data); // Log the response to debug
       toast.success("Profile updated successfully!");
-      console.log(response.data);
       onOpenChange(false);
     } catch (error) {
+      console.error("Error response:", error); // Log the full error to debug
       toast.error("Failed to update profile.");
-      console.error(error);
     }
   };
 

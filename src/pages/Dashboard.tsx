@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { HeroSection } from "@/components/dashboard/HeroSection";
 import { SessionCard } from "@/components/dashboard/SessionCard";
 import { Navigation } from "@/components/layout/Navigation";
@@ -13,13 +14,35 @@ const Dashboard = () => {
     console.log("Sending connection request to user:", userId);
   };
 
+  // Store token in localStorage when the page loads
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+
+    if (token) {
+      localStorage.setItem("authToken", token);
+      console.log("Token stored in localStorage:", token);
+    }
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
+
+  // Retrieve the token from localStorage whenever needed
+  const token = localStorage.getItem("authToken");
+
+  useEffect(() => {
+    if (token) {
+      console.log("Token fetched from localStorage:", token);
+      // Optionally: Make an API request using the token
+      // Example: fetchDataWithToken(token);
+    }
+  }, [token]); // This effect runs whenever the token changes
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">
           <HeroSection />
-          
+
           <div className="mt-12">
             <h2 className="text-2xl font-bold mb-6 text-foreground">Upcoming Sessions</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

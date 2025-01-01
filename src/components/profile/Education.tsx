@@ -6,7 +6,9 @@ import { Edit, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import axios from "axios";
+import exp from "constants";
 
+// Define the structure for an Education entry
 interface Education {
   id: string;
   userId: string;
@@ -23,7 +25,7 @@ interface EducationProps {
   initialEducation?: Education[];
 }
 
-export const Education = ({ initialEducation = [] }: EducationProps) => {
+ const Education = ({ initialEducation = [] }: EducationProps) => {
   const [education, setEducation] = useState<Education[]>(initialEducation);
   const [newEducation, setNewEducation] = useState<Omit<Education, "id" | "userId" | "createdAt" | "updatedAt">>({
     institute: "",
@@ -33,81 +35,88 @@ export const Education = ({ initialEducation = [] }: EducationProps) => {
     endDate: "",
   });
 
+  const token = localStorage.getItem("authToken"); // Retrieve the token from localStorage
+
+  // Fetch education data from the server
   useEffect(() => {
     const fetchEducation = async () => {
+      if (!token) {
+        toast.error("Please log in to access education data.");
+        return;
+      }
+
       try {
         const response = await axios.get("http://localhost:4000/api/user/education", {
-          headers: { "user-id": "cm519rtib0000ffy0llai5lc5" },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (Array.isArray(response.data)) {
           setEducation(response.data);
         } else {
-          console.error("Invalid response format:", response.data);
           toast.error("Failed to load education data.");
         }
       } catch (error) {
-        console.error("Error fetching education data:", error);
         toast.error("Error fetching education data.");
       }
     };
 
     fetchEducation();
-  }, []);
+  }, [token]);
 
+  // Add a new education entry
   const handleAdd = async () => {
-    if (!newEducation.institute || !newEducation.degree || !newEducation.fieldOfStudy || !newEducation.startDate || !newEducation.endDate) {
+    const { institute, degree, fieldOfStudy, startDate, endDate } = newEducation;
+
+    if (!institute || !degree || !fieldOfStudy || !startDate || !endDate) {
       toast.error("All fields must be filled!");
       return;
     }
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/user/education",
+        "http://localhost:4000/api/update/education",
+        { educations: [newEducation] },
         {
-          ...newEducation,
-        },
-        {
-          headers: { "user-id": "cm519rtib0000ffy0llai5lc5" },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
 
-      setEducation((prev) => [...prev, response.data]);
-      setNewEducation({
-        institute: "",
-        degree: "",
-        fieldOfStudy: "",
-        startDate: "",
-        endDate: "",
-      });
+      setEducation((prev) => [...prev, ...response.data.educations]);
+      setNewEducation({ institute: "", degree: "", fieldOfStudy: "", startDate: "", endDate: "" });
       toast.success("Education added successfully!");
     } catch (error) {
-      console.error("Error adding education:", error);
       toast.error("Error adding education entry.");
     }
   };
 
+  // Delete an education entry
   const handleDelete = async (id: string) => {
+    if (!token) {
+      toast.error("No token found. Please log in.");
+      return;
+    }
+
     try {
       await axios.delete(`http://localhost:4000/api/user/education/${id}`, {
-        headers: { "user-id": "cm519rtib0000ffy0llai5lc5" },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       setEducation((prev) => prev.filter((edu) => edu.id !== id));
       toast.success("Education entry deleted successfully!");
     } catch (error) {
-      console.error("Error deleting education:", error);
       toast.error("Error deleting education entry.");
     }
   };
 
+  // Format date for display
   const formatDateForDisplay = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
   };
 
   return (
@@ -209,5 +218,6 @@ export const Education = ({ initialEducation = [] }: EducationProps) => {
     </div>
   );
 };
+
 
 export default Education;
