@@ -3,13 +3,12 @@ import { LogIn, Menu, MessageCircle, User, Phone, Info, X, Users } from "lucide-
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useTheme } from 'next-themes';
-import logoLight from "@/components/layout/Learnswaplogo.png"
-import logoDark from "@/components/layout/LearnSwapLogoWhite.png"
+import { useTheme } from "next-themes";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   const handleLogoClick = () => {
     toast("Logged out successfully!");
@@ -19,20 +18,23 @@ export const Navigation = () => {
 
   const logoClick = () => {
     navigate("/dashboard");
-  }
-  const { theme } = useTheme();
-  const logo = theme === 'dark' ? logoLight : logoDark;
+  };
 
+  // Determine logo based on the theme
+  const logoSrc = theme === "dark"
+    ? "https://res.cloudinary.com/dehkbnswl/image/upload/v1735752262/LearnSwapLogo_cdnasz.png"
+    : "https://res.cloudinary.com/dehkbnswl/image/upload/v1735752263/LearnSwapLogoWhite_nem4cz.png";
 
   return (
     <nav className="bg-background border-b">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
+          {/* Logo */}
           <button
             onClick={logoClick}
             className="hover:opacity-80 transition-opacity"
           >
-            <img src={logo} alt="LearnSwap Logo" className="h-16 w-auto" />
+            <img src={logoSrc} alt="LearnSwap Logo" className="h-16 w-auto" />
           </button>
 
           {/* Mobile menu button */}
