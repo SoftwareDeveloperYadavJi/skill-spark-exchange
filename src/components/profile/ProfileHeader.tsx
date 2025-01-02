@@ -109,21 +109,21 @@ export const ProfileHeader = ({
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Users className="w-5 h-5 text-primary" />
-              <span className="text-xl font-semibold">128</span>
+              <span className="text-xl font-semibold">99</span>
             </div>
             <p className="text-muted-foreground">Connections</p>
           </div>
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-2 text-muted-foreground">
               <BookOpen className="w-5 h-5 text-accent" />
-              <span className="text-xl font-semibold">{sessions} </span>
+              <span className="text-xl font-semibold">{sessions} 12 </span>
             </div>
             <p className="text-muted-foreground">Sessions Conducted</p>
           </div>
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Star className="w-5 h-5 text-yellow-500" />
-              <span className="text-xl font-semibold">{rating}</span>
+              <span className="text-xl font-semibold">{!rating ? 3.1 : rating}</span>
             </div>
             <p className="text-muted-foreground">Average Rating</p>
           </div>

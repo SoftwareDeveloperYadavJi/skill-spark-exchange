@@ -1,99 +1,181 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import websocketService from "@/lib/websocketService"; // Import WebSocket Service
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { Card } from "@/components/ui/card";
-import { Send, Calendar, User, Image, FileText, Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { Send, User } from "lucide-react";
 import { toast } from "sonner";
-import { ScheduleMeeting } from "./ScheduleMeetingEdit";
-import { ReviewPopup } from "./ReviewEdit";
 
 const Messages = () => {
+  const [connectedPeople, setConnectedPeople] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [isMeetingDialogOpen, setIsMeetingDialogOpen] = useState(false);
-  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState(null);
+  const [userId, setUserId] = useState(null); // State to hold the user ID
+  const [conversationId, setConversationId] = useState(null); // For storing the conversation ID
 
-  const [selectedPerson, setSelectedPerson] = useState<{
-    id: number;
-    name: string;
-    role: string;
-  } | null>(null);
+  // Fetch user ID from the API
+  useEffect(() => {
+    const fetchUserId = async () => {
+      const token = localStorage.getItem("authToken");
 
+      try {
+        const response = await axios.get("http://localhost:4000/api/user/id", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        setUserId(response.data.userId); // Set the userId state with the response
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+        toast.error("Failed to load user ID.");
+      }
+    };
 
-  // Dummy data
-  const connectedPeople = [
-    { id: 1, name: "Nitin Yadav", role: "JavaScript Developer", status: "online" },
-    { id: 2, name: "Aryan Panchal", role: "UI/UX Designer", status: "offline" },
-    { id: 3, name: "Raja Babu", role: "React Expert", status: "online" },
-  ];
+    fetchUserId();
+  }, []);
 
-  const dummyMessages = [
-    {
-      id: 1,
-      sender: "John Doe",
-      content: {
-        type: "text",
-        message: "Hey, when can we start our session?"
-      },
-      time: "10:30 AM"
-    },
-    {
-      id: 2,
-      sender: "You",
-      content: {
-        type: "image",
-        message: "photo-1488590528505-98d2b5aba04b",
-        caption: "It's our logo babyyyy!!"
-      },
-      time: "10:35 AM"
-    },
-    {
-      id: 3,
-      sender: "John Doe",
-      content: {
-        type: "file",
-        message: "documentation.pdf",
-        fileType: "PDF"
-      },
-      time: "10:36 AM"
-    },
-  ];
+  // Fetch connected people from the API
+  useEffect(() => {
+    const fetchConnectedPeople = async () => {
+      const token = localStorage.getItem("authToken");
 
-  const handleSendMessage = (e: React.FormEvent) => {
+      try {
+        const response = await axios.get("http://localhost:4000/api/connection/connected", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const connections = response.data.map((item) => ({
+          id: item.connection.id,
+          name: item.connection.name,
+          role: item.connection.role,
+          email: item.connection.email,
+          status: "online", // Example status; replace with actual logic
+        }));
+        setConnectedPeople(connections);
+      } catch (error) {
+        console.error("Error fetching connected people:", error);
+        toast.error("Failed to load connected people.");
+      }
+    };
+
+    fetchConnectedPeople();
+  }, []);
+
+  // WebSocket Initialization
+  useEffect(() => {
+    if (userId) {
+      websocketService.connect(userId); // Pass dynamic userId to WebSocket
+
+      // Handle incoming messages
+      websocketService.socket?.on("receive_message", (newMessage) => {
+        console.log('New message received:', newMessage);  // Log the message
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      });
+
+      return () => {
+        websocketService.disconnect();
+      };
+    }
+  }, [userId]);
+
+  // Fetch conversation messages for selected person
+  useEffect(() => {
+    if (selectedPerson && userId) {
+      const fetchConversation = async () => {
+        const token = localStorage.getItem("authToken");
+        try {
+          const response = await axios.post(
+            `http://localhost:4000/api/user/conversion/${userId}/${selectedPerson.id}`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          console.log("API Response:", response.data); // Log full response to check the structure
+          const sortedMessages = response.data.sort(
+            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+          console.log("Sorted Messages:", sortedMessages);  // Log sorted messages
+          setMessages(sortedMessages || []); // Set messages from conversation
+          setConversationId(response.data.conversationId); // Set the conversation ID
+        } catch (error) {
+          console.error("Error fetching conversation:", error);
+          toast.error("Failed to load conversation.");
+        }
+      };
+
+      fetchConversation();
+    }
+  }, [selectedPerson, userId]);
+
+  // Send message via WebSocket and API
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (message.trim()) {
-      console.log("Sending message:", message);
-      toast.success("Message sent!");
-      setMessage("");
+    if (message.trim() && selectedPerson && userId) {
+      const msgData = {
+        senderId: userId,
+        receiverId: selectedPerson.id,
+        content: message,
+        conversationId: conversationId, // Include conversation ID
+      };
+
+      try {
+        // Send message via API first
+        await axios.post("http://localhost:4000/api/user/sendmessage", msgData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        // Then send message via WebSocket
+        websocketService.sendMessage(msgData);
+
+        // Update local state with the sent message
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            ...msgData,
+            content: message,
+            senderId: userId,
+          },
+        ]);
+
+        toast.success("Message sent!");
+        setMessage(""); // Clear input field after sending message
+      } catch (error) {
+        console.error("Error sending message:", error);
+        toast.error("Failed to send message.");
+      }
+    } else {
+      toast.error("Please select a person to chat with.");
     }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      console.log("File selected:", file.name);
-      toast.success(`File "${file.name}" ready to upload`);
+  // Typing notification
+  const handleTyping = () => {
+    if (selectedPerson && userId) {
+      websocketService.notifyTyping({
+        userId: userId, // Use dynamic userId
+        conversationId: conversationId, // Use the conversation ID
+      });
     }
   };
 
-  const handleScheduleMeeting = () => {
-    toast.success("Meeting scheduled successfully!");
-    console.log("Scheduling meeting");
-  };
-
-  const handleSelectPerson = (person: typeof connectedPeople[0]) => {
+  // Select a person to chat with
+  const handleSelectPerson = (person) => {
     setSelectedPerson(person);
-  };
-
-  const handleScheduleClick = () => {
-    setIsMeetingDialogOpen(true);
-    // toast.success("Meeting scheduled successfully!");
-    // console.log("Scheduling meeting");
-  };
-
-  const handleReviewClick = () => {
-    setIsReviewDialogOpen(true);
+    setMessages([]); // Reset chat messages
   };
 
   return (
@@ -110,7 +192,7 @@ const Messages = () => {
                   key={person.id}
                   onClick={() => handleSelectPerson(person)}
                   className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${selectedPerson?.id === person.id
-                    ? "border border-primary text-Black"
+                    ? "border border-primary text-white"
                     : "hover: hover:border hover:border-primary"
                     }`}
                 >
@@ -121,7 +203,12 @@ const Messages = () => {
                     <span className="font-medium">{person.name}</span>
                     <p className="text-sm text-gray-500">{person.role}</p>
                   </div>
-                  <div className={`ml-auto w-2 h-2 rounded-full ${person.status === 'online' ? 'bg-green-500' : 'bg-gray-300'}`} />
+                  <div
+                    className={`ml-auto w-2 h-2 rounded-full ${person.status === "online"
+                      ? "bg-green-500"
+                      : "bg-gray-300"
+                      }`}
+                  />
                 </div>
               ))}
             </div>
@@ -129,117 +216,49 @@ const Messages = () => {
 
           {/* Chat Window */}
           <Card className="p-4 md:col-span-2 flex flex-col h-[600px]">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">
-                {selectedPerson
-                  ? `Chat with ${selectedPerson.name}`
-                  : ""}
-              </h3>
-              {!selectedPerson ? (
-                <div />
-              ) : (
-                <div className="flex gap-2">
-                  <Button className="hover:bg-primary" variant="outline" onClick={handleReviewClick}>
-                    <User className="w-4 h-4 mr-2" />
-                    Review
-                  </Button>
-                  <Button className="hover:bg-primary" variant="outline" onClick={handleScheduleClick}>
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Schedule Meeting
-                  </Button>
-                  <ScheduleMeeting
-                    open={isMeetingDialogOpen}
-                    onOpenChange={setIsMeetingDialogOpen} />
-                  <ReviewPopup
-                    open={isReviewDialogOpen}
-                    onOpenChange={setIsReviewDialogOpen} />
-                </div>
-              )}
-
-            </div>
-
-            {/* Conditional Rendering of Messages */}
-            {!selectedPerson ? (
-              <div className="flex justify-center items-center flex-1">
-                <p className="text-center text-gray-500">
-                  Select a contact to start chatting
-                </p>
-              </div>
-            ) : (
+            {selectedPerson ? (
               <>
-                {/* Messages Container */}
-                <div className="flex-1 space-y-4 mb-4 max-h-[400px] overflow-y-auto
-  [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:bg-gray-300
-  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-third border border-bg-primary rounded-lg p-2">
-                  {dummyMessages.map((msg) => (
-                    <div
-                      key={msg.id}
-                      className={`flex ${msg.sender === "You" ? "justify-end" : "justify-start text-black"
-                        }`}
-                    >
-                      <div
-                        className={`max-w-[70%] p-3 rounded-lg ${msg.sender === "You" ? "bg-primary text-white" : "bg-secondary"
-                          }`}
-                      >
-                        {msg.content.type === "text" && (
-                          <p className="text-sm">{msg.content.message}</p>
-                        )}
-                        {msg.content.type === "image" && (
-                          <div className="space-y-2">
-                            <img
-                              src={`https://res.cloudinary.com/dehkbnswl/image/upload/v1735752263/LearnSwapLogoWhite_nem4cz.png`}
-                              alt="Shared image"
-                              className="rounded-md max-w-xs"
-                            />
-                            <p className="text-sm">{msg.content.caption}</p>
-                          </div>
-                        )}
-                        {msg.content.type === "file" && (
-                          <div className="flex items-center gap-2">
-                            <FileText className="w-4 h-4" />
-                            <span className="text-sm">{msg.content.message}</span>
-                          </div>
-                        )}
-                        <span className="text-xs opacity-70 mt-1 block">{msg.time}</span>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-between border-b pb-2 mb-4">
+                  <h3 className="font-semibold">{selectedPerson.name}</h3>
+                  <p className="text-sm text-gray-500">{selectedPerson.role}</p>
                 </div>
-
-                {/* Message Input */}
-                <form onSubmit={handleSendMessage} className="flex gap-2">
-                  <div className="flex gap-2">
-                    <Input
-                      type="file"
-                      id="file-upload"
-                      className="hidden"
-                      onChange={handleFileUpload}
-                      accept="image/*,.pdf"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      className="hover:bg-primary"
-                      onClick={() => document.getElementById("file-upload")?.click()}
-                    >
-                      <Paperclip className="w-4 h-4" />
-                    </Button>
-                  </div>
+                <div className="flex-1 overflow-y-auto mb-4">
+                  {messages.length > 0 ? (
+                    messages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`mb-2 ${msg.senderId === userId ? "text-right" : "text-left"}`}
+                      >
+                        <p className="bg-gray-200 text-black inline-block px-4 py-2 rounded-lg">
+                          {msg.content}
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No messages yet</p>  // Optional: Display a fallback message
+                  )}
+                </div>
+                <form
+                  onSubmit={handleSendMessage}
+                  className="flex items-center space-x-2"
+                >
                   <Input
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    onChange={(e) => {
+                      setMessage(e.target.value);
+                      handleTyping();
+                    }}
                     placeholder="Type your message..."
-                    className="flex-1"
                   />
-                  <Button type="submit">
+                  <Button type="submit" variant="default">
                     <Send className="w-4 h-4" />
                   </Button>
                 </form>
               </>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                <p>Select a person to start a chat</p>
+              </div>
             )}
           </Card>
         </div>
