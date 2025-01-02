@@ -9,8 +9,8 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Messages from "./pages/Messages";
 import Connections from "./pages/Connections";
-import About from "./pages/About";
 import Contact from "./pages/Contact";
+import PublicSessions from "./pages/PublicSessions";
 
 const queryClient = new QueryClient();
 
@@ -27,8 +27,8 @@ const App = () => (
             <Route path="/profile" element={<Profile />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/connections" element={<Connections />} />
-            <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/publicsessions" element={<PublicSessions />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

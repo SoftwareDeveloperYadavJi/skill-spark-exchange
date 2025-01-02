@@ -32,6 +32,10 @@ export default {
           DEFAULT: "#E5DEFF",
           foreground: "#221F26",
         },
+        third: {
+          DEFAULT: "#301934",
+          foreground: "#301934",
+        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",

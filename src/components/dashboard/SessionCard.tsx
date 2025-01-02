@@ -8,9 +8,10 @@ interface SessionCardProps {
   date: string;
   time: string;
   topics: string[];
+  meetingLink: string;
 }
 
-export const SessionCard = ({ title, mentor, date, time, topics }: SessionCardProps) => {
+export const SessionCard = ({ title, mentor, date, time, topics, meetingLink }: SessionCardProps) => {
   return (
     <Card className="p-6 hover:shadow-lg transition-shadow">
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
@@ -35,7 +36,10 @@ export const SessionCard = ({ title, mentor, date, time, topics }: SessionCardPr
           </span>
         ))}
       </div>
-      <Button className="w-full">Join Session</Button>
+      <a href={meetingLink} target="_blank" rel="noopener noreferrer">
+        <Button className="w-full">Join Session</Button>
+      </a>
+      
     </Card>
   );
 };

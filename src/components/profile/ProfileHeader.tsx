@@ -1,10 +1,10 @@
+import { useTheme } from "@/components/theme-provider";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { MapPin, Mail, Phone, Users, Star, BookOpen, Moon, Sun } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { ProfileEdit } from "./ProfileEdit";
+import { BookOpen, Mail, MapPin, Moon, Phone, Star, Sun, Users } from "lucide-react";
 import { useState } from "react";
-import { useTheme } from "@/components/theme-provider";
+import { ProfileEdit } from "./ProfileEdit";
 
 interface ProfileHeaderProps {
   email: string;
@@ -40,7 +40,7 @@ export const ProfileHeader = ({
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="bg-background rounded-lg shadow-md">
+    <div className="bg-background rounded-lg shadow-md space-y-6 border text-card-foreground">
       {/* Cover Image Section */}
       <div className="h-32 bg-gradient-to-r from-primary to-accent rounded-t-lg" />
 

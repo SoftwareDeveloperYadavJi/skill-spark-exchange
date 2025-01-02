@@ -120,7 +120,7 @@ interface EducationProps {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6 rounded-lg border bg-card text-card-foreground shadow-sm">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-foreground">Education</h2>
         <Dialog>

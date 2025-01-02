@@ -19,7 +19,7 @@ export const Footer = () => {
           </div>
           <div className="text-center md:text-left">
             <h4 className="text-lg font-semibold mb-4">Contact</h4>
-            <p className="text-muted-foreground">support@LearnSwap.com</p>
+            <p className="text-muted-foreground">learnswap2024@gmail.com</p>
           </div>
         </div>
         <div className="border-t mt-8 pt-8 text-center text-muted-foreground">

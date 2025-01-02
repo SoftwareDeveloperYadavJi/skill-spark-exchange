@@ -52,7 +52,7 @@ export const Reviews = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6 rounded-lg border bg-card text-card-foreground shadow-sm">
       <h2 className="text-2xl font-semibold">Reviews</h2>
       <div className="space-y-4">
         {reviews.map((review) => (

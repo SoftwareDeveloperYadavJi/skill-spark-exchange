@@ -73,3 +73,45 @@ export const dummyConnections = [
     status: "accepted"
   }
 ];
+
+
+export const additionalDummySessions : any= [
+
+  {
+
+    id: 1,
+
+    title: "Session 1",
+
+    mentor: "John Doe",
+
+    date: "2023-10-01",
+
+    time: "10:00 AM",
+
+    topics: ["React", "TypeScript"],
+
+    meetingLink: "https://example.com/session1"
+
+  },
+
+  {
+
+    id: 2,
+
+    title: "Session 2",
+
+    mentor: "Jane Smith",
+
+    date: "2023-10-02",
+
+    time: "11:00 AM",
+
+    topics: ["Node.js", "Express"],
+
+    meetingLink: "https://example.com/session2"
+
+  }
+
+];
+
