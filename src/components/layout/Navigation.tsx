@@ -16,7 +16,7 @@ import { useTheme } from "next-themes";
       toast("Logged out successfully!");
       localStorage.removeItem("authToken");
       navigate("/");
-    };
+    };  
 
     const logoClick = () => {
       navigate("/dashboard");

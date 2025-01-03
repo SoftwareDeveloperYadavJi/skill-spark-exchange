@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import websocketService from "@/lib/websocketService"; // Import WebSocket Service
 import { Navigation } from "@/components/layout/Navigation";
@@ -6,8 +6,10 @@ import { Footer } from "@/components/layout/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, User } from "lucide-react";
+import { Calendar, Send, User } from "lucide-react";
 import { toast } from "sonner";
+import { ScheduleMeeting } from "./ScheduleMeetingEdit";
+import { ReviewPopup } from "./ReviewEdit";
 
 const Messages = () => {
   const [connectedPeople, setConnectedPeople] = useState([]);
@@ -16,6 +18,27 @@ const Messages = () => {
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [userId, setUserId] = useState(null); // State to hold the user ID
   const [conversationId, setConversationId] = useState(null); // For storing the conversation ID
+  const [isMeetingDialogOpen, setIsMeetingDialogOpen] = useState(false);
+  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
+
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  // Scroll to bottom
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  // Handlers
+  const handleReviewClick = () => {
+    setIsReviewDialogOpen(true);
+  };
+
+  const handleScheduleClick = () => {
+    setIsMeetingDialogOpen(true);
+    // toast.success("Meeting scheduled successfully!");
+    // console.log("Scheduling meeting");
+  };
 
   // Fetch user ID from the API
   useEffect(() => {
@@ -118,6 +141,11 @@ const Messages = () => {
     }
   }, [selectedPerson, userId]);
 
+  // Scroll to bottom whenever messages update
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   // Send message via WebSocket and API
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -215,14 +243,40 @@ const Messages = () => {
           </Card>
 
           {/* Chat Window */}
-          <Card className="p-4 md:col-span-2 flex flex-col h-[600px]">
+          <Card className="p-4 md:col-span-2 flex flex-col h-[600px] ">
             {selectedPerson ? (
               <>
-                <div className="flex items-center justify-between border-b pb-2 mb-4">
-                  <h3 className="font-semibold">{selectedPerson.name}</h3>
-                  <p className="text-sm text-gray-500">{selectedPerson.role}</p>
+                <div className="flex items-center justify-between border-b pb-2">
+                  <h3 className="font-semibold">{selectedPerson.name}<p className="text-sm text-gray-500">{selectedPerson.role}</p></h3>
+                  <div className="flex gap-2">
+                    <Button className="hover:bg-primary" variant="outline" onClick={handleReviewClick}>
+                      <User className="w-4 h-4 mr-2" />
+                      Review
+                    </Button>
+                    <Button className="hover:bg-primary" variant="outline" onClick={handleScheduleClick}>
+                      <Calendar className="w-4 h-4 mr-2" />
+                      Schedule Meeting
+                    </Button>
+                    <ScheduleMeeting
+                      open={isMeetingDialogOpen}
+                      onOpenChange={setIsMeetingDialogOpen}
+                      // @ts-ignore
+                      email={selectedPerson?.email} // Pass the email here
+                    />
+                    <ReviewPopup
+                      open={isReviewDialogOpen}
+                      onOpenChange={setIsReviewDialogOpen}
+                      // @ts-ignore
+                      id = {selectedPerson?.id}
+                    />
+                  </div>
                 </div>
-                <div className="flex-1 overflow-y-auto mb-4">
+                <div ref={chatContainerRef} className="flex-1 overflow-y-auto mb-4 p-3
+                    [&::-webkit-scrollbar]:w-2
+                  [&::-webkit-scrollbar-track]:bg-gray-100
+                  [&::-webkit-scrollbar-thumb]:bg-gray-300
+                  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+                  dark:[&::-webkit-scrollbar-thumb]:bg-third">
                   {messages.length > 0 ? (
                     messages.map((msg) => (
                       <div

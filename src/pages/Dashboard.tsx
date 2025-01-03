@@ -11,11 +11,52 @@ import { toast } from "sonner";
 const Dashboard = () => {
   const [sessions, setSessions] = useState([]);
   const [suggestedConnections, setSuggestedConnections] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  // Get the current user's ID on component mount
+  useEffect(() => {
+    const fetchCurrentUserId = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const response = await axios.get("http://localhost:4000/api/user/id", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setCurrentUserId(response.data.userId);
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+      }
+    };
+
+    fetchCurrentUserId();
+  }, []);
 
   // Handle connection request
-  const handleConnect = (userId) => {
-    toast.success("Connection request sent!");
-    console.log("Sending connection request to user:", userId);
+  const handleConnect = async (requestedUserId) => {
+    if (!currentUserId) return;
+
+    try {
+      const data = {
+        userId: currentUserId,
+        requestedUserId,
+      };
+
+      const response = await axios.post(
+        "http://localhost:4000/api/connection/request",
+        data,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (response.data.message === "Connection request sent.") {
+        toast.success("Connection request sent!");
+      } else {
+        toast.error("Failed to send connection request.");
+      }
+    } catch (error) {
+      console.error("Error sending connection request:", error);
+      toast.error("Failed to send connection request.");
+    }
   };
 
   // Save token from URL parameters to localStorage
